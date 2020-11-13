@@ -99,9 +99,17 @@ def StartServerTest():
 
 
 	receivedMessage = b""
-	while receivedMessage != stopWord:
+	while True:
+	    
 	    receivedMessage = connexionWithClient.recv(1024)  # L'instruction ci-dessous peut lever une exception si le message réceptionné comporte des accents
-
+	    
+	    if receivedMessage == stopWord:
+	    	print("Fermeture connexion.")
+	    	connexionWithClient.close()
+	    	principalConnexion.close()
+	    	os.system("clear")
+	    	return None
+	    
 	    print("la valeur de hash reçu : {0}".format(receivedMessage.decode()))
 	    cryptedReceivedHash = CesarCiffer(receivedMessage.decode(), key=5)
 	    print("la valeur chiffrée de hash reçu : {0}".format(cryptedReceivedHash))
@@ -112,11 +120,7 @@ def StartServerTest():
 	    	connexionWithClient.send(b"Le fichier est mauvais")
 
 
-	print("Fermeture connexion.")
-	connexionWithClient.close()
-	principalConnexion.close()
-	os.system("clear")
-	return None
+
 
 
 ##########################################################################################################################
